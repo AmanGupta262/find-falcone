@@ -1,0 +1,64 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  font-family: sans-serif;
+
+  .flex {
+    display: flex;
+  }
+  .flex-column {
+    flex-flow: column;
+  }
+  .items-center {
+    align-items: center;
+  }
+  .justify-center {
+    justify-content: center;
+  }
+
+  header.header,
+  footer.footer {
+    padding: 0.5rem 1rem;
+    height: 40px;
+  }
+
+  main.main-container {
+    padding: 1rem;
+    height: calc(100vh - 80px);
+
+    .planets-container {
+      .planet {
+        margin-right: 1.5rem;
+        min-width: 200px;
+
+        .select-planet {
+          margin-bottom: 1rem;
+          select {
+            width: 100%;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+          }
+        }
+
+        .vehicles-container {
+          display: none;
+          &.show {
+            display: flex;
+          }
+          .vehicle {
+            margin-bottom: 0.2rem;
+            label {
+              margin-left: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
