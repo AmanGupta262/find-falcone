@@ -50,6 +50,7 @@ body {
           display: none;
           &.show {
             display: flex;
+            flex-flow: column;
           }
           .vehicle {
             margin-bottom: 0.2rem;

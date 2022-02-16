@@ -26,16 +26,27 @@ const populateVehicles = (planet) => {
     `.vehicles-container.${planet}`
   );
 
+  vehicleContainer.innerHTML = "";
+
   vehicles.forEach((veh, index) => {
     const newVehicle = document.createElement("div");
     newVehicle.classList.add("vehicle");
+
+    let distance = 0;
+    const selectedPlanet = planets.find((pl) => pl.selectNode === planet);
+    if (selectedPlanet) distance = selectedPlanet.distance;
+
     newVehicle.innerHTML = `
+      <input type="radio" ${
+        veh.max_distance < distance ? "disabled" : ""
+      } value="${veh.name}" onchange='handleVehicleSelect(this)' data-count='${
+      veh.total_no
+    }' data-speed="${veh.speed}" data-distance="${
+      veh.max_distance
+    }" name="${planet}-vehicles" id="${planet}-vehicle${index + 1}" />
       <label for="${planet}-vehicle${index + 1}">${veh.name} (${
       veh.total_no
-    })</label>
-      <input type="radio" name="${planet}-vehicles" id="${planet}-vehicle${
-      index + 1
-    }" />`;
+    })</label>`;
 
     vehicleContainer.appendChild(newVehicle);
   });
@@ -78,12 +89,23 @@ const handleSelect = (e) => {
     previousSelected.selectNode = "";
   }
 
-  const selectedPlanet = planets.find((pl) => pl.name === selectedOption);
-  selectedPlanet.selectNode = selectName;
-  selectedPlanet.selected = true;
+  if (selectedOption) {
+    const selectedPlanet = planets.find((pl) => pl.name === selectedOption);
+    selectedPlanet.selectNode = selectName;
+    selectedPlanet.selected = true;
+  }
 
   populateSelect();
-  console.log({ planets });
+
+  const vehicleContainer = document.querySelector(
+    `.vehicles-container.${selectName}`
+  );
+  if (selectedOption) vehicleContainer.classList.add("show");
+  else vehicleContainer.classList.remove("show");
+};
+
+const handleVehicleSelect = (e) => {
+  console.log("called", e.value);
 };
 
 const main = async () => {
