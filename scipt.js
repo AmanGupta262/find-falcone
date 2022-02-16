@@ -21,35 +21,51 @@ const fetchVehicles = async () => {
   return data;
 };
 
-const populateVehicles = (planet) => {
-  const vehicleContainer = document.querySelector(
-    `.vehicles-container.${planet}`
-  );
+const disableVehicle = (count, distance, max_distance) => {
+  if (count < 1 || max_distance < distance) return true;
+  return false;
+};
 
-  vehicleContainer.innerHTML = "";
+const populateVehicles = () => {
+  for (let i = 1; i <= 4; i++) {
+    const planet = `planet${i}`;
+    const vehicleContainer = document.querySelector(
+      `.vehicles-container.planet${i}`
+    );
 
-  vehicles.forEach((veh, index) => {
-    const newVehicle = document.createElement("div");
-    newVehicle.classList.add("vehicle");
+    vehicleContainer.innerHTML = "";
 
-    let distance = 0;
-    const selectedPlanet = planets.find((pl) => pl.selectNode === planet);
-    if (selectedPlanet) distance = selectedPlanet.distance;
+    vehicles.forEach((veh, index) => {
+      const newVehicle = document.createElement("div");
+      newVehicle.classList.add("vehicle");
 
-    newVehicle.innerHTML = `
-      <input type="radio" ${
-        veh.max_distance < distance ? "disabled" : ""
-      } value="${veh.name}" onchange='handleVehicleSelect(this)' data-count='${
-      veh.total_no
-    }' data-speed="${veh.speed}" data-distance="${
-      veh.max_distance
-    }" name="${planet}-vehicles" id="${planet}-vehicle${index + 1}" />
+      let distance = 0;
+      const selectedPlanet = planets.find((pl) => pl.selectNode === planet);
+      if (selectedPlanet) distance = selectedPlanet.distance;
+
+      console.log({ planets });
+      const checked =
+        veh.selected && selectedPlanet && selectedPlanet.vehicle === veh.name;
+      const disabled =
+        disableVehicle(veh.total_no, distance, veh.max_distance) && !checked;
+
+      newVehicle.innerHTML = `
+      <input type="radio" ${disabled ? "disabled" : ""} ${
+        checked ? "checked" : ""
+      } value="${
+        veh.name
+      }" data-planet="${planet}" onchange='handleVehicleSelect(this)' data-count='${
+        veh.total_no
+      }' data-speed="${veh.speed}" data-distance="${
+        veh.max_distance
+      }" name="${planet}-vehicles" id="${planet}-vehicle${index + 1}" />
       <label for="${planet}-vehicle${index + 1}">${veh.name} (${
-      veh.total_no
-    })</label>`;
+        veh.total_no
+      })</label>`;
 
-    vehicleContainer.appendChild(newVehicle);
-  });
+      vehicleContainer.appendChild(newVehicle);
+    });
+  }
 };
 
 const populateSelect = () => {
@@ -61,7 +77,7 @@ const populateSelect = () => {
     selector.appendChild(defaultOpt);
 
     const selectName = selector.getAttribute("name");
-    populateVehicles(selectName);
+
     planets.forEach((pl) => {
       const opt = document.createElement("option");
 
@@ -96,6 +112,7 @@ const handleSelect = (e) => {
   }
 
   populateSelect();
+  populateVehicles();
 
   const vehicleContainer = document.querySelector(
     `.vehicles-container.${selectName}`
@@ -105,16 +122,39 @@ const handleSelect = (e) => {
 };
 
 const handleVehicleSelect = (e) => {
-  console.log("called", e.value);
+  const count = e.getAttribute("data-count");
+  const name = e.value;
+  const planet = e.getAttribute("data-planet");
+
+  const selectedPlanet = planets.find((pl) => pl.selectNode === planet);
+  const vehicle = vehicles.find((vh) => vh.name === name);
+
+  vehicle.total_no -= 1;
+  vehicle.selectNode = planet;
+  vehicle.selected = true;
+  selectedPlanet.vehicle = vehicle.name;
+
+  populateVehicles();
+
+  console.log({ count, name, planet });
 };
 
 const main = async () => {
   planets = await fetchPlanets();
-  planets = planets.map((pl) => ({ ...pl, selected: false, selectNode: "" }));
+  planets = planets.map((pl) => ({
+    ...pl,
+    selected: false,
+    selectNode: "",
+    vehicle: "",
+  }));
   vehicles = await fetchVehicles();
-  vehicles = vehicles.map((pl) => ({ ...pl, selected: false }));
+  vehicles = vehicles.map((pl) => ({
+    ...pl,
+    selected: false,
+  }));
 
   populateSelect();
+  populateVehicles();
   console.log({ planets, vehicles });
 };
 
