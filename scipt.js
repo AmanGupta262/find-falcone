@@ -1,6 +1,8 @@
-const planetsApi = "https://findfalcone.herokuapp.com/planets";
-const vehiclesApi = "https://findfalcone.herokuapp.com/vehicles";
-const findFalconApi = "https://findfalcone.herokuapp.com/find";
+const baseUrl = "https://findfalcone.herokuapp.com";
+const planetsApi = `${baseUrl}/planets`;
+const vehiclesApi = `${baseUrl}/vehicles`;
+const findFalconApi = `${baseUrl}/find`;
+const getToken = `${baseUrl}/token`;
 
 let planets = [];
 let vehicles = [];
@@ -8,6 +10,7 @@ let vehicles = [];
 // planets container
 const planetsContainer = document.querySelector(".planets-container");
 const planetSelctors = document.querySelectorAll(".planet-selector");
+const timeContainer = document.querySelector(".time-taken");
 
 const fetchPlanets = async () => {
   const res = await fetch(planetsApi);
@@ -19,6 +22,22 @@ const fetchVehicles = async () => {
   const res = await fetch(vehiclesApi);
   const data = await res.json();
   return data;
+};
+
+const calculateTime = () => {
+  const selectedPlanets = planets.filter((pl) => pl.selected && pl.speed);
+  let totalTime = 0;
+  selectedPlanets.forEach((sp) => {
+    if (sp.selected && sp.speed) {
+      const time = sp.distance / parseInt(sp.speed);
+      console.log({ time, d: sp.distance, s: sp.speed });
+      totalTime += time;
+    }
+  });
+  timeContainer.innerHTML = totalTime;
+
+  if (selectedPlanets.length === 4) findFalconeContainer.classList.add("show");
+  else findFalconeContainer.classList.remove("show");
 };
 
 const disableVehicle = (count, distance, max_distance) => {
@@ -124,6 +143,8 @@ const handleSelect = (e) => {
   );
   if (selectedOption) vehicleContainer.classList.add("show");
   else vehicleContainer.classList.remove("show");
+
+  calculateTime();
 };
 
 const handleVehicleSelect = (e) => {
@@ -137,7 +158,6 @@ const handleVehicleSelect = (e) => {
   const previousVehicle = vehicles.find(
     (vh) => vh.name === previousVehicleName
   );
-  console.log({ previousVehicle, previousVehicleName });
 
   if (previousVehicle) {
     previousVehicle.total_no += 1;
@@ -148,10 +168,10 @@ const handleVehicleSelect = (e) => {
   vehicle.selectNode = planet;
   vehicle.selected = true;
   selectedPlanet.vehicle = vehicle.name;
+  selectedPlanet.speed = vehicle.speed;
 
   populateVehicles();
-
-  console.log({ count, name, planet });
+  calculateTime();
 };
 
 const main = async () => {
@@ -161,6 +181,7 @@ const main = async () => {
     selected: false,
     selectNode: "",
     vehicle: "",
+    speed: 0,
   }));
   vehicles = await fetchVehicles();
   vehicles = vehicles.map((pl) => ({
@@ -170,7 +191,6 @@ const main = async () => {
 
   populateSelect();
   populateVehicles();
-  console.log({ planets, vehicles });
 };
 
 main();
