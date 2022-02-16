@@ -43,7 +43,6 @@ const populateVehicles = () => {
       const selectedPlanet = planets.find((pl) => pl.selectNode === planet);
       if (selectedPlanet) distance = selectedPlanet.distance;
 
-      console.log({ planets });
       const checked =
         veh.selected && selectedPlanet && selectedPlanet.vehicle === veh.name;
       const disabled =
@@ -103,6 +102,12 @@ const handleSelect = (e) => {
   if (previousSelected) {
     previousSelected.selected = false;
     previousSelected.selectNode = "";
+    const vehicle = vehicles.find((vh) => previousSelected.vehicle === vh.name);
+    if (vehicle) {
+      vehicle.total_no += 1;
+      vehicle.selected = false;
+    }
+    previousSelected.vehicle = "";
   }
 
   if (selectedOption) {
@@ -128,6 +133,16 @@ const handleVehicleSelect = (e) => {
 
   const selectedPlanet = planets.find((pl) => pl.selectNode === planet);
   const vehicle = vehicles.find((vh) => vh.name === name);
+  const previousVehicleName = selectedPlanet.vehicle;
+  const previousVehicle = vehicles.find(
+    (vh) => vh.name === previousVehicleName
+  );
+  console.log({ previousVehicle, previousVehicleName });
+
+  if (previousVehicle) {
+    previousVehicle.total_no += 1;
+    previousVehicle.selectNode = "";
+  }
 
   vehicle.total_no -= 1;
   vehicle.selectNode = planet;
