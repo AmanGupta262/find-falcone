@@ -10,54 +10,62 @@
   <body>
     <header class="header">header</header>
     <main class="main-container">
-      <div class="planets-container flex justify-center">
-        <div class="planet">
-          <div class="select-planet">
-            <select
-              onchange="handleSelect(this)"
-              class="planet-selector planet1"
-              name="planet1"
-              id="planet1"
-            ></select>
+      <div class="configuration">
+        <div class="planets-container flex justify-center">
+          <div class="planet">
+            <div class="select-planet">
+              <select
+                onchange="handleSelect(this)"
+                class="planet-selector planet1"
+                name="planet1"
+                id="planet1"
+              ></select>
+            </div>
+            <div class="vehicles-container planet1"></div>
           </div>
-          <div class="vehicles-container planet1"></div>
-        </div>
-        <div class="planet">
-          <div class="select-planet">
-            <select
-              onchange="handleSelect(this)"
-              class="planet-selector planet2"
-              name="planet2"
-              id="planet2"
-            ></select>
+          <div class="planet">
+            <div class="select-planet">
+              <select
+                onchange="handleSelect(this)"
+                class="planet-selector planet2"
+                name="planet2"
+                id="planet2"
+              ></select>
+            </div>
+            <div class="vehicles-container planet2"></div>
           </div>
-          <div class="vehicles-container planet2"></div>
-        </div>
-        <div class="planet">
-          <div class="select-planet">
-            <select
-              onchange="handleSelect(this)"
-              class="planet-selector planet3"
-              name="planet3"
-              id="planet3"
-            ></select>
+          <div class="planet">
+            <div class="select-planet">
+              <select
+                onchange="handleSelect(this)"
+                class="planet-selector planet3"
+                name="planet3"
+                id="planet3"
+              ></select>
+            </div>
+            <div class="vehicles-container planet3"></div>
           </div>
-          <div class="vehicles-container planet3"></div>
-        </div>
-        <div class="planet">
-          <div class="select-planet">
-            <select
-              onchange="handleSelect(this)"
-              class="planet-selector planet4"
-              name="planet4"
-              id="planet4"
-            ></select>
+          <div class="planet">
+            <div class="select-planet">
+              <select
+                onchange="handleSelect(this)"
+                class="planet-selector planet4"
+                name="planet4"
+                id="planet4"
+              ></select>
+            </div>
+            <div class="vehicles-container planet4"></div>
           </div>
-          <div class="vehicles-container planet4"></div>
+          <div class="time-taken-container">
+            Time take: <span class="time-taken">0</span>
+          </div>
         </div>
-        <div class="time-taken-container">
-          Time take: <span class="time-taken">0</span>
+        <div class="find-falcone-container flex justify-center">
+          <button onclick="findFalcone()">Find Falcone</button>
         </div>
+      </div>
+      <div class="result flex justify-center">
+
       </div>
     </main>
     <footer class="footer">footer</footer>

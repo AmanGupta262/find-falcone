@@ -11,6 +11,11 @@ let vehicles = [];
 const planetsContainer = document.querySelector(".planets-container");
 const planetSelctors = document.querySelectorAll(".planet-selector");
 const timeContainer = document.querySelector(".time-taken");
+const findFalconeContainer = document.querySelector(".find-falcone-container");
+const configContainer = document.querySelector(".configuration");
+const resultContainer = document.querySelector(".result");
+const successResponse =
+  "Success! Congratulations on Finding Falcone, King Shah is mighty pleased.";
 
 const fetchPlanets = async () => {
   const res = await fetch(planetsApi);
@@ -38,6 +43,8 @@ const calculateTime = () => {
 
   if (selectedPlanets.length === 4) findFalconeContainer.classList.add("show");
   else findFalconeContainer.classList.remove("show");
+
+  return totalTime;
 };
 
 const disableVehicle = (count, distance, max_distance) => {
@@ -174,7 +181,10 @@ const handleVehicleSelect = (e) => {
   calculateTime();
 };
 
-const main = async () => {
+const reset = async () => {
+  configContainer.classList.remove("hide");
+  resultContainer.classList.remove("show");
+  findFalconeContainer.classList.remove("show");
   planets = await fetchPlanets();
   planets = planets.map((pl) => ({
     ...pl,
@@ -191,6 +201,51 @@ const main = async () => {
 
   populateSelect();
   populateVehicles();
+};
+
+const findFalcone = async () => {
+  let res = await fetch(getToken, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  let resJson = await res.json();
+  const { token } = resJson;
+
+  const selectedPlanets = planets.filter((pl) => pl.selected && pl.speed);
+
+  res = await fetch(findFalconApi, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token,
+      planet_names: selectedPlanets.map((sp) => sp.name),
+      vehicle_names: selectedPlanets.map((sp) => sp.vehicle),
+    }),
+  });
+
+  resJson = await res.json();
+
+  configContainer.classList.add("hide");
+  resultContainer.classList.add("show");
+
+  if (resJson.error)
+    resultContainer.innerHTML = `<div>${error}</div><div><button onclick="reset()">Start Again</button>`;
+  else if (resJson.status === "false")
+    resultContainer.innerHTML = `<div>Sorry, Falcone is not present in any of them</div><div><button onclick="reset()">Start Again</button>`;
+  else
+    resultContainer.innerHTML = `<div>${successResponse}</div><div>Time taken: ${calculateTime()}</div><div>Planet: ${
+      resJson.planet_name
+    }</div><div><button onclick="reset()">Start Again</button></div>`;
+};
+
+const main = async () => {
+  await reset();
 };
 
 main();

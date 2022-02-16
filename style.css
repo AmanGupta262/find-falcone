@@ -47,6 +47,24 @@ body main.main-container {
   height: calc(100vh - 80px);
 }
 
+body main.main-container .configuration.hide {
+  display: none;
+}
+
+body main.main-container .result {
+  display: none;
+}
+
+body main.main-container .result.show {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+}
+
 body main.main-container .planets-container .planet {
   margin-right: 1.5rem;
   min-width: 200px;
@@ -82,5 +100,16 @@ body main.main-container .planets-container .planet .vehicles-container .vehicle
 
 body main.main-container .planets-container .planet .vehicles-container .vehicle label {
   margin-left: 0.5rem;
+}
+
+body main.main-container .find-falcone-container {
+  display: none;
+  margin-top: 12px;
+}
+
+body main.main-container .find-falcone-container.show {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 /*# sourceMappingURL=style.css.map */
