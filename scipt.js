@@ -21,6 +21,26 @@ const fetchVehicles = async () => {
   return data;
 };
 
+const populateVehicles = (planet) => {
+  const vehicleContainer = document.querySelector(
+    `.vehicles-container.${planet}`
+  );
+
+  vehicles.forEach((veh, index) => {
+    const newVehicle = document.createElement("div");
+    newVehicle.classList.add("vehicle");
+    newVehicle.innerHTML = `
+      <label for="${planet}-vehicle${index + 1}">${veh.name} (${
+      veh.total_no
+    })</label>
+      <input type="radio" name="${planet}-vehicles" id="${planet}-vehicle${
+      index + 1
+    }" />`;
+
+    vehicleContainer.appendChild(newVehicle);
+  });
+};
+
 const populateSelect = () => {
   planetSelctors.forEach((selector) => {
     selector.innerHTML = "";
@@ -29,9 +49,10 @@ const populateSelect = () => {
     defaultOpt.innerHTML = "Select planet";
     selector.appendChild(defaultOpt);
 
+    const selectName = selector.getAttribute("name");
+    populateVehicles(selectName);
     planets.forEach((pl) => {
       const opt = document.createElement("option");
-      const selectName = selector.getAttribute("name");
 
       opt.value = pl.name;
       opt.innerHTML = pl.name;
