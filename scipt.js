@@ -81,9 +81,7 @@ const populateVehicles = () => {
         veh.name
       }" data-planet="${planet}" onchange='handleVehicleSelect(this)' data-count='${
         veh.total_no
-      }' data-speed="${veh.speed}" data-distance="${
-        veh.max_distance
-      }" name="${planet}-vehicles" id="${planet}-vehicle${index + 1}" />
+      }' name="${planet}-vehicles" id="${planet}-vehicle${index + 1}" />
       <label for="${planet}-vehicle${index + 1}">${veh.name} (${
         veh.total_no
       })</label>`;
@@ -155,7 +153,6 @@ const handleSelect = (e) => {
 };
 
 const handleVehicleSelect = (e) => {
-  const count = e.getAttribute("data-count");
   const name = e.value;
   const planet = e.getAttribute("data-planet");
 
@@ -185,6 +182,7 @@ const reset = async () => {
   configContainer.classList.remove("hide");
   resultContainer.classList.remove("show");
   findFalconeContainer.classList.remove("show");
+
   planets = await fetchPlanets();
   planets = planets.map((pl) => ({
     ...pl,
@@ -193,6 +191,7 @@ const reset = async () => {
     vehicle: "",
     speed: 0,
   }));
+
   vehicles = await fetchVehicles();
   vehicles = vehicles.map((pl) => ({
     ...pl,
@@ -201,6 +200,8 @@ const reset = async () => {
 
   populateSelect();
   populateVehicles();
+
+  timeContainer.innerHTML = 0;
 };
 
 const findFalcone = async () => {
